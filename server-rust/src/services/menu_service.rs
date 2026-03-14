@@ -1,19 +1,37 @@
+use crate::models::{Dish, Menu, MenuNutrition};
 use crate::error::AppError;
-use crate::models::{Dish, Menu, Nutrition};
 
-pub struct MenuService;
+pub struct MenuService {
+    ai_provider: String,
+    glm_api_key: Option<String>,
+    openai_api_key: Option<String>,
+}
 
 impl MenuService {
-    pub fn new() -> Self {
-        Self
+    pub fn new(
+        ai_provider: String,
+        glm_api_key: Option<String>,
+        openai_api_key: Option<String>,
+    ) -> Self {
+        Self {
+            ai_provider,
+            glm_api_key,
+            openai_api_key,
+        }
     }
 
     pub async fn generate_menu(
         &self,
         meal_type: &str,
         _servings: u8,
+        _preferences: &[String],
+        _restrictions: &[String],
     ) -> Result<Menu, AppError> {
-        // 模拟数据（实际应该调用 AI API）
+        // 暂时使用模拟数据，AI 集成可后续添加
+        self.get_mock_menu(meal_type)
+    }
+
+    fn get_mock_menu(&self, meal_type: &str) -> Result<Menu, AppError> {
         let (dishes, nutrition) = match meal_type {
             "早餐" => (
                 vec![
@@ -30,7 +48,7 @@ impl MenuService {
                         time: "30分钟".to_string(),
                     },
                 ],
-                Nutrition {
+                MenuNutrition {
                     calories: 450,
                     protein: 15,
                     carbs: 60,
@@ -52,7 +70,7 @@ impl MenuService {
                         time: "10分钟".to_string(),
                     },
                 ],
-                Nutrition {
+                MenuNutrition {
                     calories: 650,
                     protein: 25,
                     carbs: 45,
@@ -74,7 +92,7 @@ impl MenuService {
                         time: "10分钟".to_string(),
                     },
                 ],
-                Nutrition {
+                MenuNutrition {
                     calories: 400,
                     protein: 30,
                     carbs: 25,
@@ -91,14 +109,14 @@ impl MenuService {
         Ok(Menu { dishes, nutrition })
     }
 
-    pub async fn get_recommendations(&self) -> serde_json::Value {
+    pub async fn get_recommendations() -> serde_json::Value {
         serde_json::json!({
             "popular": [
                 {"name": "宫保鸡丁", "rating": 4.8, "orders": 1256},
-                {"name": "麻婆豆腐", "rating": 4.7, "orders": 987},
+                {"name": "麻婆豆腐", "rating": 4.7, "orders": 987}
             ],
             "seasonal": [
-                {"name": "春笋炒肉", "reason": "春季时令"},
+                {"name": "春笋炒肉", "reason": "春季时令"}
             ]
         })
     }

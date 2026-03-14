@@ -9,15 +9,15 @@ pub struct Dish {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Nutrition {
+pub struct Menu {
+    pub dishes: Vec<Dish>,
+    pub nutrition: MenuNutrition,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct MenuNutrition {
     pub calories: u32,
     pub protein: u32,
     pub carbs: u32,
     pub fat: u32,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Menu {
-    pub dishes: Vec<Dish>,
-    pub nutrition: Nutrition,
 }

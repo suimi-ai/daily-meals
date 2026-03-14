@@ -1,3 +1,4 @@
+mod ai;
 mod config;
 mod error;
 mod models;
@@ -7,6 +8,7 @@ mod utils;
 
 use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
+use std::sync::Arc;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[actix_web::main]
@@ -23,16 +25,20 @@ async fn main() -> std::io::Result<()> {
         .init();
 
     // 加载配置
-    let config = config::Config::from_env();
-    tracing::info!("🚀 启动服务器 {}:{}", config.host, config.port);
+    let config = Arc::new(config::Config::from_env());
+    let host = config.host.clone();
+    let port = config.port;
+    
+    tracing::info!("🚀 启动服务器 {}:{}", host, port);
+    tracing::info!("🤖 AI 提供商: {}", config.ai_provider);
 
     HttpServer::new(move || {
+        let config_clone = config.clone();
         App::new()
             .wrap(Cors::permissive())
-            .app_data(web::Data::new(config.clone()))
-            .configure(routes::configure)
+            .configure(move |cfg| routes::configure(cfg, config_clone.clone()))
     })
-    .bind((config.host.as_str(), config.port))?
+    .bind((host.as_str(), port))?
     .run()
     .await
 }
