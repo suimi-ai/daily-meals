@@ -15,10 +15,7 @@ impl ShoppingService {
         servings: u8,
         existing_ingredients: Vec<String>,
     ) -> Result<ShoppingList, AppError> {
-        // 模拟食材数据库
         let ingredient_db = self.get_ingredient_database();
-
-        // 收集所有食材
         let mut all_ingredients: Vec<Ingredient> = Vec::new();
 
         for dish_name in dishes {
@@ -31,10 +28,8 @@ impl ShoppingService {
             }
         }
 
-        // 合并相同食材
         let merged = self.merge_ingredients(all_ingredients);
 
-        // 标记已有食材
         let final_list = merged
             .into_iter()
             .map(|mut ing| {
@@ -50,10 +45,8 @@ impl ShoppingService {
             })
             .collect();
 
-        // 分类
         let categorized = self.categorize_ingredients(final_list);
 
-        // 统计
         let total_items: usize = categorized.values().map(|v| v.len()).sum();
         let need_to_buy = categorized
             .values()
@@ -168,7 +161,6 @@ impl ShoppingService {
 
         let multiplier = servings as f32 / base_servings as f32;
 
-        // 简单的分量调整
         if let Some(num) = ingredient.amount.chars().next() {
             if num.is_numeric() {
                 if let Some(pos) = ingredient.amount.find(|c: char| !c.is_numeric()) {
@@ -188,10 +180,7 @@ impl ShoppingService {
 
         for ing in ingredients {
             let key = ing.name.clone();
-            if let Some(_existing) = merged.get_mut(&key) {
-                // 简单合并：保留第一个的量
-                // 实际项目中需要更复杂的单位换算
-            } else {
+            if !merged.contains_key(&key) {
                 merged.insert(key, ing);
             }
         }
@@ -209,10 +198,7 @@ impl ShoppingService {
         }
     }
 
-    fn categorize_ingredients(
-        &self,
-        ingredients: Vec<Ingredient>,
-    ) -> HashMap<String, Vec<Ingredient>> {
+    fn categorize_ingredients(&self, ingredients: Vec<Ingredient>) -> HashMap<String, Vec<Ingredient>> {
         let mut categorized: HashMap<String, Vec<Ingredient>> = HashMap::new();
 
         for ing in ingredients {

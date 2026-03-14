@@ -1,6 +1,3 @@
-use actix_web::{http::StatusCode, HttpResponse, ResponseError};
-use chrono::Utc;
-use serde::Serialize;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -8,7 +5,7 @@ pub enum AppError {
     #[error("验证错误: {0}")]
     ValidationError(String),
 
-    #[error("资源未找到: {0}")]
+    #[error("未找到: {0}")]
     NotFoundError(String),
 
     #[error("AI 服务错误: {0}")]
@@ -18,35 +15,24 @@ pub enum AppError {
     InternalError(String),
 }
 
-#[derive(Serialize)]
-pub struct ErrorResponse {
-    pub success: bool,
-    pub error: ErrorDetail,
-}
+impl actix_web::error::ResponseError for AppError {
+    fn error_response(&self) -> actix_web::HttpResponse {
+        use actix_web::HttpResponse;
 
-#[derive(Serialize)]
-pub struct ErrorDetail {
-    pub code: String,
-    pub message: String,
-    pub timestamp: String,
-}
+        let error_message = self.to_string();
 
-impl ResponseError for AppError {
-    fn error_response(&self) -> HttpResponse {
-        let (error_code, status_code) = match self {
-            AppError::ValidationError(_) => ("VALIDATION_ERROR", StatusCode::BAD_REQUEST),
-            AppError::NotFoundError(_) => ("NOT_FOUND", StatusCode::NOT_FOUND),
-            AppError::AIServiceError(_) => ("AI_SERVICE_ERROR", StatusCode::INTERNAL_SERVER_ERROR),
-            AppError::InternalError(_) => ("INTERNAL_ERROR", StatusCode::INTERNAL_SERVER_ERROR),
-        };
+        HttpResponse::build(self.status_code()).json(serde_json::json!({
+            "success": false,
+            "error": error_message
+        }))
+    }
 
-        HttpResponse::build(status_code).json(ErrorResponse {
-            success: false,
-            error: ErrorDetail {
-                code: error_code.to_string(),
-                message: self.to_string(),
-                timestamp: Utc::now().to_rfc3339(),
-            },
-        })
+    fn status_code(&self) -> actix_web::http::StatusCode {
+        match self {
+            AppError::ValidationError(_) => actix_web::http::StatusCode::BAD_REQUEST,
+            AppError::NotFoundError(_) => actix_web::http::StatusCode::NOT_FOUND,
+            AppError::AIServiceError(_) => actix_web::http::StatusCode::SERVICE_UNAVAILABLE,
+            AppError::InternalError(_) => actix_web::http::StatusCode::INTERNAL_SERVER_ERROR,
+        }
     }
 }
