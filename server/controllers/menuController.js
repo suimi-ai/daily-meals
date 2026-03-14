@@ -1,20 +1,24 @@
 const menuService = require('../services/menuService');
+const { successResponse, errorResponse } = require('../utils/response');
+const { ValidationError } = require('../utils/errors');
 
 /**
  * 生成菜单
  * POST /api/menu/generate
  * Body: { mealType, preferences, servings, restrictions }
  */
-exports.generateMenu = async (req, res) => {
+exports.generateMenu = async (req, res, next) => {
   try {
     const { mealType, preferences, servings, restrictions } = req.body;
     
     // 参数验证
     if (!mealType) {
-      return res.status(400).json({ 
-        success: false, 
-        message: '请指定用餐类型（早餐/午餐/晚餐）' 
-      });
+      throw new ValidationError('请指定用餐类型（早餐/午餐/晚餐）');
+    }
+
+    const validMealTypes = ['早餐', '午餐', '晚餐'];
+    if (!validMealTypes.includes(mealType)) {
+      throw new ValidationError('用餐类型必须是：早餐、午餐或晚餐');
     }
 
     const menu = await menuService.generateMenu({
@@ -24,16 +28,9 @@ exports.generateMenu = async (req, res) => {
       restrictions: restrictions || []
     });
 
-    res.json({
-      success: true,
-      data: menu
-    });
+    res.json(successResponse(menu, '菜单生成成功'));
   } catch (error) {
-    console.error('生成菜单失败:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: '生成菜单失败，请稍后重试' 
-    });
+    next(error);
   }
 };
 
@@ -41,18 +38,11 @@ exports.generateMenu = async (req, res) => {
  * 获取推荐菜品
  * GET /api/menu/recommend
  */
-exports.getRecommendations = async (req, res) => {
+exports.getRecommendations = async (req, res, next) => {
   try {
     const recommendations = await menuService.getRecommendations();
-    res.json({
-      success: true,
-      data: recommendations
-    });
+    res.json(successResponse(recommendations, '获取推荐成功'));
   } catch (error) {
-    console.error('获取推荐失败:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: '获取推荐失败' 
-    });
+    next(error);
   }
 };

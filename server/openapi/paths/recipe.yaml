@@ -1,0 +1,81 @@
+getByName:
+  get:
+    tags:
+      - recipe
+    summary: 获取菜谱详情
+    description: 根据菜品名称获取详细的制作步骤和指导
+    operationId: getRecipe
+    parameters:
+      - name: dishName
+        in: path
+        required: true
+        description: 菜品名称（URL编码）
+        schema:
+          type: string
+        example: 红烧肉
+    responses:
+      '200':
+        description: 成功获取菜谱
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '../schemas/response.yaml#/SuccessResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '../schemas/recipe.yaml#/Recipe'
+      '404':
+        description: 菜谱不存在
+        content:
+          application/json:
+            schema:
+              $ref: '../schemas/response.yaml#/ErrorResponse'
+            example:
+              success: false
+              error:
+                code: NOT_FOUND
+                message: 未找到该菜谱
+
+search:
+  get:
+    tags:
+      - recipe
+    summary: 搜索菜谱
+    description: 根据关键词搜索菜谱
+    operationId: searchRecipes
+    parameters:
+      - name: keyword
+        in: query
+        description: 搜索关键词
+        required: false
+        schema:
+          type: string
+        example: 红烧
+    responses:
+      '200':
+        description: 成功搜索菜谱
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '../schemas/response.yaml#/SuccessResponse'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            example: 红烧肉
+                          description:
+                            type: string
+                            example: 经典家常菜
+                          difficulty:
+                            type: integer
+                            example: 4
+                          time:
+                            type: string
+                            example: 90分钟
