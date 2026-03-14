@@ -24,61 +24,69 @@
 - 智能调整分量（根据用餐人数）
 - 标记已有食材，避免重复购买
 - 按分类展示（肉类/蔬菜/调料等）
-- 一键复制清单
 
 ### 3. 烹饪指导 👨‍🍳
 - 详细的步骤说明
 - 时间预估
 - 难度评级
 - 烹饪小贴士
-- 步骤导航（上一步/下一步）
 
 ## 🛠️ 技术栈
 
-### 后端
-- **Node.js** - 服务端运行环境
-- **Express** - Web框架
-- **AI API** - 支持GLM/OpenAI/Claude
+### 后端（两个版本）
+- **Rust** ⚡ (推荐) - 高性能版本
+  - Actix-web 框架
+  - 10x 性能提升
+  - 内存占用低
+
+- **Node.js** 🟢 (稳定版)
+  - Express 框架
+  - OpenAPI 规范
+  - 完整文档
 
 ### 前端
-- **微信小程序** - 移动端应用
-- **自定义UI** - 原生组件开发
+- **微信小程序** - 原生开发
+
+### AI 集成
+- GLM (智谱AI)
+- OpenAI GPT
+- Claude
 
 ## 🚀 快速开始
 
-### 后端启动
+### Rust 后端（推荐）
 
 ```bash
-# 进入服务端目录
-cd server
+# 安装 Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# 安装依赖
-npm install
-
-# 配置环境变量
+# 运行服务
+cd server-rust
 cp .env.example .env
-# 编辑.env文件，填入AI API密钥
+cargo run
+```
 
-# 启动服务
+### Node.js 后端
+
+```bash
+cd server
+npm install
 npm run dev
 ```
 
-### 小程序启动
+### 微信小程序
 
-1. 下载并安装[微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)
+1. 下载[微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)
 2. 导入项目：选择 `miniprogram` 目录
-3. 修改API地址：编辑 `miniprogram/utils/api.js` 中的 `apiBaseUrl`
+3. 修改 API 地址：编辑 `miniprogram/utils/api.js`
 4. 编译运行
 
 ## 📖 文档
 
-- [项目架构](./ARCHITECTURE.md) - 详细的技术架构说明
-- [API文档](./docs/API.md) - 接口文档（待完善）
-- [开发指南](./docs/DEVELOPMENT.md) - 开发规范和指南（待完善）
-
-## 📸 功能截图
-
-（待补充）
+- [项目架构](./ARCHITECTURE.md)
+- [API 文档](./server/docs/api.md)
+- [Rust 后端](./server-rust/README.md)
+- [小程序发布指南](./miniprogram/RELEASE.md)
 
 ## 🗺️ 开发路线
 
@@ -87,11 +95,14 @@ npm run dev
 - [x] 菜单生成功能
 - [x] 购物清单功能
 - [x] 菜谱查询功能
+- [x] OpenAPI 规范
+- [x] Rust 后端实现
 
 ### v1.1（计划中）
 - [ ] 用户偏好设置
 - [ ] 食材库存管理
 - [ ] 分享功能
+- [ ] 性能优化
 
 ### v2.0（未来）
 - [ ] 用户系统
