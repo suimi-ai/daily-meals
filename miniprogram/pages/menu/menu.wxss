@@ -1,0 +1,94 @@
+.dish-card {
+  background-color: white;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.3s;
+}
+
+.dish-card.selected {
+  border-color: #FF6B6B;
+  background-color: #fff5f5;
+}
+
+.dish-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.dish-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.dish-check {
+  width: 40rpx;
+  height: 40rpx;
+  background-color: #FF6B6B;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+}
+
+.dish-desc {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.dish-meta {
+  display: flex;
+  gap: 30rpx;
+  margin-bottom: 16rpx;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.dish-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  padding: 12rpx 24rpx;
+  border: 2rpx solid #FF6B6B;
+  color: #FF6B6B;
+  border-radius: 40rpx;
+  font-size: 24rpx;
+}
+
+.nutrition-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+
+.nutrition-item {
+  text-align: center;
+}
+
+.nutrition-item .value {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #FF6B6B;
+  margin-bottom: 8rpx;
+}
+
+.nutrition-item .label {
+  font-size: 24rpx;
+  color: #999;
+}

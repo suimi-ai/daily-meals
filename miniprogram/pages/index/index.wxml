@@ -1,0 +1,63 @@
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="greeting">今天想吃点什么？</view>
+    <view class="subtitle">AI为您智能推荐美味佳肴</view>
+  </view>
+
+  <!-- 用餐类型选择 -->
+  <view class="card">
+    <view class="title">选择用餐类型</view>
+    <view class="meal-types">
+      <view 
+        wx:for="{{mealTypes}}" 
+        wx:key="*this"
+        class="meal-type {{selectedMeal === item ? 'active' : ''}}"
+        data-meal="{{item}}"
+        bindtap="selectMeal"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 用餐人数 -->
+  <view class="card">
+    <view class="title">用餐人数</view>
+    <view class="servings-input">
+      <input 
+        type="number" 
+        value="{{servings}}" 
+        bindinput="changeServings"
+        min="1"
+        max="10"
+      />
+      <text>人</text>
+    </view>
+  </view>
+
+  <!-- 生成按钮 -->
+  <view class="btn-primary" bindtap="generateMenu" wx:if="{{!loading}}">
+    生成今日菜单
+  </view>
+
+  <view class="btn-primary loading-btn" wx:if="{{loading}}">
+    生成中...
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-actions">
+    <view class="action-item" bindtap="viewRecommendations">
+      <text class="icon">🔥</text>
+      <text>热门推荐</text>
+    </view>
+    <view class="action-item">
+      <text class="icon">⭐</text>
+      <text>我的收藏</text>
+    </view>
+    <view class="action-item">
+      <text class="icon">📝</text>
+      <text>历史菜单</text>
+    </view>
+  </view>
+</view>

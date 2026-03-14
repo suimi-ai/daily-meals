@@ -1,0 +1,56 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">生成购物清单中...</view>
+
+  <view wx:if="{{!loading && shoppingList}}">
+    <!-- 汇总信息 -->
+    <view class="card">
+      <view class="summary">
+        <view class="summary-item">
+          <view class="value">{{shoppingList.summary.totalItems}}</view>
+          <view class="label">总食材</view>
+        </view>
+        <view class="summary-item">
+          <view class="value need">{{shoppingList.summary.needToBuy}}</view>
+          <view class="label">需购买</view>
+        </view>
+        <view class="summary-item">
+          <view class="value have">{{shoppingList.summary.alreadyHave}}</view>
+          <view class="label">已有</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 食材列表 -->
+    <view wx:for="{{shoppingList.ingredients}}" wx:for-item="items" wx:for-index="category" class="category-section">
+      <view class="category-title">{{category}}</view>
+      
+      <view 
+        wx:for="{{items}}" 
+        wx:for-item="ingredient"
+        class="ingredient-card {{ingredient.purchased ? 'purchased' : ''}}"
+        data-category="{{category}}"
+        data-index="{{index}}"
+        bindtap="markPurchased"
+      >
+        <view class="ingredient-info">
+          <view class="ingredient-name">{{ingredient.name}}</view>
+          <view class="ingredient-amount">{{ingredient.amount}}</view>
+        </view>
+        
+        <view class="ingredient-status">
+          <view class="status-badge {{ingredient.status === '已有' ? 'have' : 'need'}}">
+            {{ingredient.status}}
+          </view>
+          <view class="check-icon" wx:if="{{ingredient.purchased}}">✓</view>
+        </view>
+
+        <view class="ingredient-tip">{{ingredient.purchaseTip}}</view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="btn-primary" bindtap="copyList">
+      复制购物清单
+    </view>
+  </view>
+</view>

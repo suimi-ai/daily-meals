@@ -1,0 +1,127 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">加载菜谱中...</view>
+
+  <view wx:if="{{!loading && recipe}}">
+    <!-- 菜谱头部 -->
+    <view class="recipe-header">
+      <view class="recipe-title">{{recipe.name}}</view>
+      <view class="recipe-desc">{{recipe.description}}</view>
+      
+      <view class="recipe-meta">
+        <view class="meta-item">
+          <text class="icon">⏱</text>
+          <text>{{recipe.time}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="icon">📊</text>
+          <text>难度 {{recipe.difficulty}}/5</text>
+        </view>
+        <view class="meta-item">
+          <text class="icon">👥</text>
+          <text>{{recipe.servings}}人份</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 食材清单 -->
+    <view class="card">
+      <view class="title">食材清单</view>
+      <view class="ingredients-list">
+        <view wx:for="{{recipe.ingredients}}" wx:key="name" class="ingredient-item">
+          <text class="ingredient-name">{{item.name}}</text>
+          <text class="ingredient-amount">{{item.amount}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 制作步骤 -->
+    <view class="card">
+      <view class="title">制作步骤</view>
+      
+      <!-- 步骤指示器 -->
+      <view class="step-indicator">
+        <view 
+          wx:for="{{recipe.steps}}" 
+          wx:key="step"
+          class="step-dot {{currentStep >= index ? 'active' : ''}}"
+          data-step="{{index}}"
+          bindtap="goToStep"
+        >
+          {{index + 1}}
+        </view>
+      </view>
+
+      <!-- 当前步骤详情 -->
+      <view class="step-detail">
+        <view class="step-title">
+          步骤{{recipe.steps[currentStep].step}}: {{recipe.steps[currentStep].title}}
+        </view>
+        
+        <view class="step-time">
+          <text class="icon">⏱</text>
+          <text>{{recipe.steps[currentStep].time}}</text>
+        </view>
+        
+        <view class="step-description">
+          {{recipe.steps[currentStep].description}}
+        </view>
+        
+        <view class="step-tips" wx:if="{{recipe.steps[currentStep].tips}}">
+          <view class="tips-title">💡 小贴士</view>
+          <view class="tips-content">{{recipe.steps[currentStep].tips}}</view>
+        </view>
+      </view>
+
+      <!-- 步骤导航 -->
+      <view class="step-navigation">
+        <view 
+          class="nav-btn {{currentStep === 0 ? 'disabled' : ''}}" 
+          bindtap="prevStep"
+        >
+          上一步
+        </view>
+        <view class="step-counter">{{currentStep + 1}} / {{recipe.steps.length}}</view>
+        <view 
+          class="nav-btn {{currentStep === recipe.steps.length - 1 ? 'disabled' : ''}}" 
+          bindtap="nextStep"
+        >
+          下一步
+        </view>
+      </view>
+    </view>
+
+    <!-- 营养信息 -->
+    <view class="card" wx:if="{{recipe.nutrition}}">
+      <view class="title">营养信息</view>
+      <view class="nutrition-grid">
+        <view class="nutrition-item">
+          <view class="value">{{recipe.nutrition.calories}}</view>
+          <view class="label">卡路里</view>
+        </view>
+        <view class="nutrition-item">
+          <view class="value">{{recipe.nutrition.protein}}g</view>
+          <view class="label">蛋白质</view>
+        </view>
+        <view class="nutrition-item">
+          <view class="value">{{recipe.nutrition.carbs}}g</view>
+          <view class="label">碳水</view>
+        </view>
+        <view class="nutrition-item">
+          <view class="value">{{recipe.nutrition.fat}}g</view>
+          <view class="label">脂肪</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 小贴士 -->
+    <view class="card" wx:if="{{recipe.tips}}">
+      <view class="title">烹饪小贴士</view>
+      <view class="tips-list">
+        <view wx:for="{{recipe.tips}}" wx:key="*this" class="tip-item">
+          <text class="bullet">•</text>
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
