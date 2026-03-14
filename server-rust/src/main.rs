@@ -6,8 +6,11 @@ mod routes;
 mod services;
 mod utils;
 
+#[cfg(test)]
+mod tests;
+
 use actix_cors::Cors;
-use actix_web::{web, App, HttpServer};
+use actix_web::{App, HttpServer};
 use std::sync::Arc;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -28,7 +31,7 @@ async fn main() -> std::io::Result<()> {
     let config = Arc::new(config::Config::from_env());
     let host = config.host.clone();
     let port = config.port;
-    
+
     tracing::info!("🚀 启动服务器 {}:{}", host, port);
     tracing::info!("🤖 AI 提供商: {}", config.ai_provider);
 

@@ -188,7 +188,7 @@ impl ShoppingService {
 
         for ing in ingredients {
             let key = ing.name.clone();
-            if let Some(existing) = merged.get_mut(&key) {
+            if let Some(_existing) = merged.get_mut(&key) {
                 // 简单合并：保留第一个的量
                 // 实际项目中需要更复杂的单位换算
             } else {
@@ -209,13 +209,16 @@ impl ShoppingService {
         }
     }
 
-    fn categorize_ingredients(&self, ingredients: Vec<Ingredient>) -> HashMap<String, Vec<Ingredient>> {
+    fn categorize_ingredients(
+        &self,
+        ingredients: Vec<Ingredient>,
+    ) -> HashMap<String, Vec<Ingredient>> {
         let mut categorized: HashMap<String, Vec<Ingredient>> = HashMap::new();
 
         for ing in ingredients {
             categorized
                 .entry(ing.category.clone())
-                .or_insert_with(Vec::new)
+                .or_default()
                 .push(ing);
         }
 

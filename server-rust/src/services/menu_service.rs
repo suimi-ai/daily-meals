@@ -1,5 +1,5 @@
-use crate::models::{Dish, Menu, MenuNutrition};
 use crate::error::AppError;
+use crate::models::{Dish, Menu, MenuNutrition};
 
 pub struct MenuService {
     ai_provider: String,

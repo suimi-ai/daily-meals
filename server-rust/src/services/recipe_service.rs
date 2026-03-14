@@ -84,7 +84,8 @@ impl RecipeService {
                     RecipeStep {
                         step: 2,
                         title: "焯水去腥".to_string(),
-                        description: "肉块冷水下锅，加入料酒和姜片，煮沸后撇去浮沫，捞出沥干".to_string(),
+                        description: "肉块冷水下锅，加入料酒和姜片，煮沸后撇去浮沫，捞出沥干"
+                            .to_string(),
                         time: "10分钟".to_string(),
                         tips: Some("焯水可以去除血水和腥味".to_string()),
                     },
@@ -156,9 +157,7 @@ impl RecipeService {
                     carbs: 5,
                     fat: 6,
                 }),
-                tips: Some(vec![
-                    "选择新鲜的鲈鱼，肉质更鲜美".to_string(),
-                ]),
+                tips: Some(vec!["选择新鲜的鲈鱼，肉质更鲜美".to_string()]),
             }),
             _ => None,
         }

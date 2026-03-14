@@ -1,23 +1,25 @@
 pub mod menu;
-pub mod shopping;
 pub mod recipe;
+pub mod shopping;
 
+use crate::config::Config;
 use actix_web::{web, HttpResponse};
 use std::sync::Arc;
-use crate::config::Config;
 
 pub fn configure(cfg: &mut web::ServiceConfig, config: Arc<Config>) {
-    cfg.app_data(web::Data::new(config))
-        .service(
-            web::scope("/api")
-                .route("/menu/generate", web::post().to(menu::generate))
-                .route("/menu/recommend", web::get().to(menu::recommend))
-                .route("/shopping/generate", web::post().to(shopping::generate))
-                .route("/shopping/inventory", web::post().to(shopping::update_inventory))
-                .route("/recipe/search", web::get().to(recipe::search))
-                .route("/recipe/{name}", web::get().to(recipe::get))
-                .route("/health", web::get().to(health)),
-        );
+    cfg.app_data(web::Data::new(config)).service(
+        web::scope("/api")
+            .route("/menu/generate", web::post().to(menu::generate))
+            .route("/menu/recommend", web::get().to(menu::recommend))
+            .route("/shopping/generate", web::post().to(shopping::generate))
+            .route(
+                "/shopping/inventory",
+                web::post().to(shopping::update_inventory),
+            )
+            .route("/recipe/search", web::get().to(recipe::search))
+            .route("/recipe/{name}", web::get().to(recipe::get))
+            .route("/health", web::get().to(health)),
+    );
 }
 
 async fn health() -> HttpResponse {
